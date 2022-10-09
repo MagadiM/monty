@@ -1,17 +1,38 @@
 #include "monty.h"
-
 /**
- * add - adds the top two elements of the stack
- * @stack - points to the linked list for the stack
- * @line_number: number of line opcodes
+ * _swap - swap top of stack y second top stack
+ * @stack: pointer to lists for monty stack
+ * @line_number: number of line opcode occurs on
  */
 
-void add(stack_t **stack, unsigned int line_number)
+void _swap(stack_t **stack, unsigned int line_number)
+{
+	stack_t *runner;
+	int tmp;
+
+	runner = *stack;
+	if (runner == NULL || runner->next == NULL)
+	{
+		fprintf(stderr, "L%d: can't swap, stack too short\n", line_number);
+		exit(EXIT_FAILURE);
+	}
+	tmp = runner->n;
+	runner->n = runner->next->n;
+	runner->next->n = tmp;
+}
+
+/**
+ * _add - add top of stack y second top stack
+ * @stack: pointer to lists for monty stack
+ * @line_number: number of line opcode occurs on
+ */
+
+void _add(stack_t **stack, unsigned int line_number)
 {
 	stack_t *tmp = *stack;
 	int sum = 0, i = 0;
 
-	if(tmp == NULL)
+	if (tmp == NULL)
 	{
 		fprintf(stderr, "L%d: can't add, stack too short\n", line_number);
 		exit(EXIT_FAILURE);
@@ -35,105 +56,59 @@ void add(stack_t **stack, unsigned int line_number)
 }
 
 /**
- * nop - it doesn't do anything
- * @stack - pointer to linked lists
- * @line_number: number of line opcodes
+ * _nop - nop top of stack y second top stack
+ * @stack: pointer to lists for monty stack
+ * @line_number: number of line opcode occurs on
  */
 
-void nop(__attribute__((unused))stack_t **stack, __attribute__((unused)) unsigned int line_number)
+void _nop(__attribute__ ((unused))stack_t **stack,
+		__attribute__ ((unused)) unsigned int line_number)
 {
 	;
 }
 
 /**
- * sub - subtacts the top elements of stack
- * @stack: pointer to the linked lists
- * @line_number: number of line opcodes
+ * _pchar - prints the ASCII value of a number
+ * @stack: pointer to the top of the stack
+ * @line_number: the index of the current line
+ *
  */
-void sub(stack_t **stack, unsigned int line_number)
+void _pchar(stack_t **stack, unsigned int line_number)
 {
-	stack_t *tmp = *stack;
-	int sub = 0, i = 0;
+	int val;
 
-	if (tmp == NULL)
+	if (stack == NULL || *stack == NULL)
 	{
-		fprintf(stderr, "L%d: can't sub, stack too short\n", line_number);
+		fprintf(stderr, "L%d: can't pchar, stack empty\n", line_number);
+		free(var_global.buffer);
+		fclose(var_global.file);
+		free_dlistint(*stack);
 		exit(EXIT_FAILURE);
 	}
 
-	while (tmp)
+	val = (*stack)->n;
+	if (val > 127 || val < 0)
 	{
-		tmp = tmp->next;
-		i++;
-	}
-
-	if (stack == NULL || (*stack)->next == NULL || i <= 1)
-	{
-		fprintf(stderr, "L%d: can't sub, stack too short\n", line_number);
+		fprintf(stderr, "L%d: can't pchar, value out of range\n", line_number);
+		free(var_global.buffer);
+		fclose(var_global.file);
+		free_dlistint(*stack);
 		exit(EXIT_FAILURE);
 	}
-	sub = (*stack)->next->n - (*stack)->n;
-	pop(stack, line_number);
 
-	(*stack)->n = sub;
+	putchar(val);
+	putchar('\n');
 }
 
 /**
- * div - divides the second top element by the top element of the stack
- * @stack: pointer to linked lists
- * @line_number: the number of line opcodes
+ * _isalpha - checks if int is in alphabet
+ * @c: int
+ * Return: 1 if yes, 0 if no
  */
-
-void div(stack_t **stack, unsigned int line_number)
+int _isalpha(int c)
 {
-	int div = 0;
-
-	if (*stack == NULL || (*stack)->next == NULL)
-	{
-		fprintf(stderr, "L%u: can't div, stack too short\n", line_number);
-		free(var_global.buffer);
-		fclose(var_global.file);
-		free_dlistint(*stack);
-		exit(EXIT_FAILURE);
-	}
-	else if ((*stack)->n == 0)
-	{
-		fprintf(stderr, "L%d: division by zero\n", line_number);
-		free(var_global.buffer);
-		fclose(var_global.file);
-		free_dlistint(*stack);
-		exit(EXIT_FAILURE);
-	}
+	if ((c >= 97 && c <= 122) || (c >= 65 && c <= 90))
+		return (1);
 	else
-	{
-		div = (*stack)->n;
-		pop(stack, line_number);
-		(*stack)->n /= div;
-	}
-}
-
-/**
- * mul - multiplies the top elements of the stack
- * @stack: pointer to the linked list
- * @line_number: number of line opcode
- */
-
-void mul(stack_t **stack, unsigned int line_number)
-{
-	int aux;
-
-	if (*stack == NULL || (*stack)->next == NULL)
-	{
-		fprintf(stderr, "L%d: can't mul, stack too short\n", line_number);
-		free(var_global.buffer);
-		fclose(var_global.file);
-		free_dlistint(*stack);
-		exit(EXIT_FAILURE);
-	}
-	else
-	{
-		aux = (*stack)->n;
-		pop(stack, line_number);
-		(*stack)->n *= aux;
-	}
+		return (0);
 }

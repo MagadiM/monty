@@ -1,12 +1,10 @@
 #include "monty.h"
-
 /**
- * push - pushes int to a stack
- * @stack: linked lists for the monty stack
- * @line_number: number of line opcodes occur
+ * _push - push int to a stack
+ * @stack: linked lists for monty stack
+ * @line_number: number of line opcode occurs on
  */
-
-void push(stack_t **stack, __attriute__((unused))unsigned int line_number)
+void _push(stack_t **stack, __attribute__ ((unused))unsigned int line_number)
 {
 	stack_t *top;
 	(void)line_number;
@@ -27,52 +25,50 @@ void push(stack_t **stack, __attriute__((unused))unsigned int line_number)
 }
 
 /**
- * pall -prints values in the stack
- * @stack - this is a pointer to the linked list
- * @line_number: the number of the line opcode
+ * _pall - print all function
+ * @stack: pointer to linked list stack
+ * @line_number: number of line opcode occurs on
  */
-
-void pall(stack_t **stack, __attribute__((unused))unsigned int line_number)
+void _pall(stack_t **stack, __attribute__ ((unused))unsigned int line_number)
 {
-	stack_t *p;
+	stack_t *runner;
 
-	p = *stack;
-	while (p != NULL)
+	runner = *stack;
+	while (runner != NULL)
 	{
-		printf("%d\n", p->n);
-		p = p->next;
+		printf("%d\n", runner->n);
+		runner = runner->next;
 	}
 }
 
 /**
- * pint -prints the value at the top of the stack
- * @stack: pointer to the linked list stack
- * @line_number - the number of the line opcode
+ * _pint - print int a top of stack
+ * @stack: pointer to linked list stack
+ * @line_number: number of line opcode occurs on
+ *
  */
-
-void pint(stack_t **stack, unsigned int line_number)
+void _pint(stack_t **stack, unsigned int line_number)
 {
-	stack_t *p;
+	stack_t *runner;
 
-	p = *stack;
-	if(p == NULL)
+	runner = *stack;
+	if (runner == NULL)
 	{
-		fprintf(stderr, "L<%d>: can't pint, stack empty\n", line_number);
-	       exit(EXIT_FAILURE);
+		fprintf(stderr, "L%d: can't pint, stack empty\n", line_number);
+		exit(EXIT_FAILURE);
 	}
-	printf("%d\n", p->n);
+	printf("%d\n", runner->n);
 }
 
 /**
- * pop - removes the top element of the stack
- * @stack - pointer to the head node
- * @line_number- numberline opcode occurs
- * Return: void
+ * _pop - remove element a list
+ *@stack: pointer to first node
+ *@line_number: integer
+ *Return: void
  */
-
-void pop(stack_t **stack, unsigned int line_number)
+void _pop(stack_t **stack, unsigned int line_number)
 {
-	stack_t nodo = *stack;
+	stack_t *nodo = *stack;
 
 	if (stack == NULL || *stack == NULL)
 	{
@@ -80,29 +76,24 @@ void pop(stack_t **stack, unsigned int line_number)
 		exit(EXIT_FAILURE);
 	}
 	*stack = nodo->next;
-	if(*stack != NULL)
+	if (*stack != NULL)
 		(*stack)->prev = NULL;
 	free(nodo);
 }
 
 /**
- * swap - swap top two elements of the stack
- * @stack: pointer to lists for the stack
- * @line_number: number of line opcode
+ * free_dlistint - free a list
+ * @head: pointer to first node
+ *
  */
-
-void swap(stack_t **stack, unsigned int line_number)
+void free_dlistint(stack_t *head)
 {
-	stack_t *p;
-	int tmp;
+	stack_t *tmp;
 
-	p = *stack;
-	if (p == NULL || p->next == NULL)
+	while (head != NULL)
 	{
-		fprintf(stderr, "L%d: can't swap, stack too short\n", line_number);
-		exit(EXIT_FAILURE);
+		tmp = head->next;
+		free(head);
+		head = tmp;
 	}
-	tmp = p->n;
-	p->n = p->next->n;
-	p->next->n = tmp;
 }
