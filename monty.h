@@ -53,9 +53,9 @@ typedef struct global_variable
 	char token2;
 	FILE *fd;
 	char *line_buf;
-} global_variable;
+} global_var;
 
-extern global_variable;
+extern global_var var_global;
 
 void read_file(char *filename, stack_t **stack);
 char *parse_line(char *line, stack_t **stack, unsigned int line_number);
@@ -86,5 +86,7 @@ void pstr(stack_t **stack, unsigned int line_number);
 /*utility functions*/
 void free_dlistint(stack_t *head);
 int _isalpha(int c);
+void dobfree(stack_t **stack);
+void dobfree2(stack_t **stack);
 
 #endif
